@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checklist de Disney Pixar Cars</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="pagina">
+    <header class="cabecera">
+      <div>
+        <p class="supertitulo">Checklist de colección</p>
+        <h1>Checklist de Disney Pixar Cars</h1>
+        <p class="descripcion">Marca qué autitos y presentaciones tienes, buscas o te faltan. Tus selecciones se guardan automáticamente en el navegador.</p>
+      </div>
+      <button id="btnReiniciar" type="button" class="boton boton-terciario">Reiniciar mi checklist</button>
+    </header>
+
+    <section class="menu-nav" role="tablist" aria-label="Navegación principal">
+      <button class="tab activo" type="button" data-view="home">Home</button>
+      <button class="tab" type="button" data-view="search-cars">Search Cars</button>
+      <button class="tab" type="button" data-view="search-year">Search by Year</button>
+    </section>
+
+    <section id="home" class="view">
+      <section class="resumen" aria-label="Resumen de checklist">
+        <article class="resumen-card">
+          <span>Total de autitos</span>
+          <strong id="totalAutitos">0</strong>
+        </article>
+        <article class="resumen-card resumen-positivo">
+          <span>Lo tengo</span>
+          <strong id="tengoAutitos">0</strong>
+        </article>
+        <article class="resumen-card resumen-aviso">
+          <span>Lo busco</span>
+          <strong id="buscoAutitos">0</strong>
+        </article>
+        <article class="resumen-card resumen-falta">
+          <span>Me falta</span>
+          <strong id="faltaAutitos">0</strong>
+        </article>
+        <article class="resumen-card resumen-progreso">
+          <span>% completado</span>
+          <strong id="porcentajeCompletado">0%</strong>
+        </article>
+      </section>
+    </section>
+
+    <section id="search-cars" class="view hidden">
+      <section class="filtros" aria-label="Filtros de búsqueda">
+        <label class="campo-busqueda">
+          <span>Buscar autito</span>
+          <input id="busqueda" type="search" placeholder="Nombre o variante" autocomplete="off" />
+        </label>
+
+        <label class="campo-filtro">
+          <span>Filtrar por estado</span>
+          <select id="filtroEstado">
+            <option value="todos">Todos</option>
+            <option value="lo-tengo">Lo tengo</option>
+            <option value="lo-busco">Lo busco</option>
+            <option value="me-falta">Me falta</option>
+          </select>
+        </label>
+      </section>
+
+      <section id="catalogo" class="catalogo" aria-live="polite"></section>
+
+      <p id="mensajeNoResultados" class="texto-empty hidden">No se encontraron autitos con esa búsqueda o filtro.</p>
+    </section>
+
+    <section id="search-year" class="view hidden">
+      <section class="filtros" aria-label="Buscar por año">
+        <label class="campo-filtro">
+          <span>Selecciona un año</span>
+          <select id="filtroAnio">
+            <option value="todos">Todos</option>
+          </select>
+        </label>
+      </section>
+      <section id="presentacionesPorAnioContenido" class="presentaciones-por-anio" aria-live="polite"></section>
+    </section>
+
+  <script src="data-modelos.js" defer></script>
+  <script src="data-ediciones.js" defer></script>
+  <script src="data-presentaciones.js" defer></script>
+  <script src="app.js" defer></script>
+</body>
+</html>

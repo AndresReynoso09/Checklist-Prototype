@@ -1,0 +1,11 @@
+{
+  "name": "checklist-diecast",
+  "version": "0.1.0",
+  "description": "Helper scripts for checklist-diecast",
+  "scripts": {
+    "fetch-prices": "node fetch_prices.js"
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.7"
+  }
+}
