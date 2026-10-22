@@ -12,7 +12,11 @@ const elementos = {
   filtroEstado: document.getElementById('filtroEstado'),
   filtroAnio: document.getElementById('filtroAnio'),
   presentacionesPorAnioContenido: document.getElementById('presentacionesPorAnioContenido'),
-  menuTabs: document.querySelectorAll('.menu-nav .tab'),
+  presentacionesModal: document.getElementById('presentacionesModal'),
+  presentacionesModalTitulo: document.getElementById('presentacionesModalTitulo'),
+  presentacionesModalContenido: document.getElementById('presentacionesModalContenido'),
+  presentacionesModalCerrar: document.getElementById('presentacionesModalCerrar'),
+  menuTabs: document.querySelectorAll('.tab-nav, .menu-nav .tab, button[data-view]'),
   views: document.querySelectorAll('.view'),
   mensajeNoResultados: document.getElementById('mensajeNoResultados'),
   totalAutitos: document.getElementById('totalAutitos'),
@@ -234,6 +238,12 @@ function crearTarjetaPresentacion(presentacion) {
       crearBotonEstado(estadoEtiqueta[estado], estado, estadoDirecto, () => {
         guardarEstadoPresentacion(presentacion.id, estado);
         renderizarCatalogo();
+        if (elementos.presentacionesModal && !elementos.presentacionesModal.classList.contains('hidden')) {
+          const edicionActual = ediciones.find(item => presentacionesParaEdicion(item).some(p => p.id === presentacion.id));
+          if (edicionActual) {
+            abrirModalPresentaciones(edicionActual);
+          }
+        }
       })
     );
   });
@@ -255,6 +265,7 @@ function crearTarjetaEdicion(edicion) {
   const estadoDirecto = obtenerEstadoDirectoEdicion(edicion.id);
   const estadoEfectivo = calcularEstadoEfectivoEdicion(edicion);
   const obtenidoMediante = obtenerTextoObtenidoMediante(edicion);
+  const estadoActivoEnTarjeta = estadoEfectivo;
 
   const tarjeta = document.createElement('article');
   tarjeta.className = 'tarjeta';
@@ -390,7 +401,7 @@ function crearTarjetaEdicion(edicion) {
 
   ['lo-tengo', 'lo-busco', 'me-falta'].forEach(estado => {
     botonera.appendChild(
-      crearBotonEstado(estadoEtiqueta[estado], estado, estadoDirecto, () => {
+      crearBotonEstado(estadoEtiqueta[estado], estado, estadoActivoEnTarjeta, () => {
         guardarEstadoEdicion(edicion.id, estado);
         renderizarCatalogo();
       })
@@ -411,10 +422,7 @@ function crearTarjetaEdicion(edicion) {
   panelPresentaciones.className = 'presentaciones hidden';
 
   btnVer.addEventListener('click', () => {
-    panelPresentaciones.classList.toggle('hidden');
-    btnVer.innerHTML = panelPresentaciones.classList.contains('hidden')
-      ? '<span>Ver presentaciones</span>'
-      : '<span>Ocultar presentaciones</span>';
+    abrirModalPresentaciones(edicion);
   });
 
   acciones.appendChild(btnVer);
@@ -438,6 +446,87 @@ function crearTarjetaEdicion(edicion) {
   tarjeta.appendChild(panelPresentaciones);
 
   return tarjeta;
+}
+
+function abrirModalPresentaciones(edicion) {
+  const modal = elementos.presentacionesModal;
+  const contenido = elementos.presentacionesModalContenido;
+  const titulo = elementos.presentacionesModalTitulo;
+
+  if (!modal || !contenido || !titulo) return;
+
+  const modelo = obtenerModeloParaEdicion(edicion);
+  titulo.textContent = `${modelo.nombre} · Presentaciones`;
+  contenido.innerHTML = '';
+
+  const presentacionesRelacionadas = presentacionesParaEdicion(edicion);
+  if (!presentacionesRelacionadas.length) {
+    const vacio = document.createElement('p');
+    vacio.className = 'texto-empty';
+    vacio.textContent = 'No hay presentaciones asociadas.';
+    contenido.appendChild(vacio);
+  } else {
+    presentacionesRelacionadas.forEach(presentacion => {
+      const card = document.createElement('article');
+      card.className = 'tarjeta presentacion-mini modal-presentacion';
+
+      const bloque = document.createElement('div');
+      bloque.className = 'presentacion-mini-contenido';
+
+      const nombre = document.createElement('strong');
+      nombre.textContent = presentacion.nombre;
+      bloque.appendChild(nombre);
+
+      if (presentacion.productCode) {
+        const meta = document.createElement('div');
+        meta.className = 'presentacion-mini-meta';
+        meta.textContent = `Código de producto: ${presentacion.productCode}`;
+        bloque.appendChild(meta);
+      }
+
+      const estadoActual = obtenerEstadoDirectoPresentacion(presentacion.id);
+      const botonera = document.createElement('div');
+      botonera.className = 'botones-estado presentacion-mini-botones';
+      ['lo-tengo', 'lo-busco', 'me-falta'].forEach(estado => {
+        botonera.appendChild(
+          crearBotonEstado(estadoEtiqueta[estado], estado, estadoActual, () => {
+            guardarEstadoPresentacion(presentacion.id, estado);
+            renderizarCatalogo();
+            abrirModalPresentaciones(edicion);
+          })
+        );
+      });
+
+      const img = document.createElement('div');
+      img.className = 'presentacion-mini-imagen';
+      if (presentacion.imagen) {
+        const base = String(presentacion.imagen).split('/').pop().toLowerCase();
+        const candidates = [presentacion.imagen];
+        if (base) {
+          if (presentacion.año) candidates.push(`images/${presentacion.año}/${base}`);
+          candidates.push(`images/${base}`);
+        }
+        setBackgroundFromCandidates(img, candidates, '');
+      } else {
+        img.classList.add('no-image');
+      }
+
+      bloque.appendChild(img);
+      bloque.appendChild(botonera);
+      card.appendChild(bloque);
+      contenido.appendChild(card);
+    });
+  }
+
+  modal.classList.remove('hidden');
+  modal.setAttribute('aria-hidden', 'false');
+}
+
+function cerrarModalPresentaciones() {
+  const modal = elementos.presentacionesModal;
+  if (!modal) return;
+  modal.classList.add('hidden');
+  modal.setAttribute('aria-hidden', 'true');
 }
 
 function renderizarCatalogo() {
@@ -492,9 +581,22 @@ function configurarEventos() {
     });
   }
 
+  if (elementos.presentacionesModalCerrar) {
+    elementos.presentacionesModalCerrar.addEventListener('click', cerrarModalPresentaciones);
+  }
+
+  if (elementos.presentacionesModal) {
+    elementos.presentacionesModal.addEventListener('click', event => {
+      if (event.target instanceof HTMLElement && event.target.dataset.closeModal === 'true') {
+        cerrarModalPresentaciones();
+      }
+    });
+  }
+
   elementos.menuTabs.forEach(tab => {
     tab.addEventListener('click', () => {
       const viewId = tab.dataset.view;
+      if (!viewId) return;
       mostrarVista(viewId);
     });
   });
@@ -542,7 +644,6 @@ function popularFiltroAnio() {
 }
 
 function renderPresentacionesPorAnio(value) {
-  // value: 'todos' or year string
   elementos.presentacionesPorAnioContenido.innerHTML = '';
 
   if (value === 'todos') {
@@ -556,7 +657,6 @@ function renderPresentacionesPorAnio(value) {
     return;
   }
 
-  // order types: individual (autos) first, then Pack de 2, Multipack, Playset, DVD, others
   const ordenTipos = ['Blister Individual', 'Pack de 2', 'Multipack', 'Playset', 'DVD'];
 
   const grouped = {};
@@ -573,7 +673,6 @@ function renderPresentacionesPorAnio(value) {
   titulo.textContent = `Presentaciones ${año}`;
   contenedor.appendChild(titulo);
 
-  // first, render items from ordenTipos in that order
   ordenTipos.forEach(tipo => {
     if (!grouped[tipo]) return;
     const grupoEl = document.createElement('div');
@@ -599,14 +698,7 @@ function renderPresentacionesPorAnio(value) {
         pc.textContent = `Código de producto: ${item.productCode}`;
         contenido.appendChild(pc);
       }
-      if (item.precioEstimado) {
-        const pr = document.createElement('div');
-        pr.className = 'presentacion-mini-meta';
-        pr.textContent = `Precio estimado: ${item.precioEstimado}`;
-        contenido.appendChild(pr);
-      }
 
-      // image on the right (only if presentacion.imagen is defined)
       const imgDiv = document.createElement('div');
       imgDiv.className = 'presentacion-mini-imagen';
       if (item.imagen) {
@@ -618,19 +710,31 @@ function renderPresentacionesPorAnio(value) {
         }
         setBackgroundFromCandidates(imgDiv, candidates, '');
       } else {
-        // mark as no-image so CSS can collapse the box
         imgDiv.classList.add('no-image');
       }
 
+      const estadoActual = obtenerEstadoDirectoPresentacion(item.id);
+      const botonera = document.createElement('div');
+      botonera.className = 'botones-estado presentacion-mini-botones';
+      ['lo-tengo', 'lo-busco', 'me-falta'].forEach(estado => {
+        botonera.appendChild(
+          crearBotonEstado(estadoEtiqueta[estado], estado, estadoActual, () => {
+            guardarEstadoPresentacion(item.id, estado);
+            renderizarCatalogo();
+            renderPresentacionesPorAnio(String(año));
+          })
+        );
+      });
+
+      contenido.appendChild(imgDiv);
+      contenido.appendChild(botonera);
       tarjeta.appendChild(contenido);
-      tarjeta.appendChild(imgDiv);
       grupoEl.appendChild(tarjeta);
     });
 
     contenedor.appendChild(grupoEl);
   });
 
-  // render any remaining tipos not in ordenTipos
   Object.keys(grouped).forEach(tipo => {
     if (ordenTipos.includes(tipo)) return;
     const grupoEl = document.createElement('div');
@@ -656,12 +760,6 @@ function renderPresentacionesPorAnio(value) {
         pc.textContent = `Código de producto: ${item.productCode}`;
         contenido.appendChild(pc);
       }
-      if (item.precioEstimado) {
-        const pr = document.createElement('div');
-        pr.className = 'presentacion-mini-meta';
-        pr.textContent = `Precio estimado: ${item.precioEstimado}`;
-        contenido.appendChild(pr);
-      }
 
       const imgDiv = document.createElement('div');
       imgDiv.className = 'presentacion-mini-imagen';
@@ -677,8 +775,22 @@ function renderPresentacionesPorAnio(value) {
         imgDiv.classList.add('no-image');
       }
 
+      const estadoActual = obtenerEstadoDirectoPresentacion(item.id);
+      const botonera = document.createElement('div');
+      botonera.className = 'botones-estado presentacion-mini-botones';
+      ['lo-tengo', 'lo-busco', 'me-falta'].forEach(estado => {
+        botonera.appendChild(
+          crearBotonEstado(estadoEtiqueta[estado], estado, estadoActual, () => {
+            guardarEstadoPresentacion(item.id, estado);
+            renderizarCatalogo();
+            renderPresentacionesPorAnio(String(año));
+          })
+        );
+      });
+
+      contenido.appendChild(imgDiv);
+      contenido.appendChild(botonera);
       tarjeta.appendChild(contenido);
-      tarjeta.appendChild(imgDiv);
       grupoEl.appendChild(tarjeta);
     });
 
@@ -686,18 +798,6 @@ function renderPresentacionesPorAnio(value) {
   });
 
   elementos.presentacionesPorAnioContenido.appendChild(contenedor);
-
-  // Cleanup: hide any meta labels that were created without values
-  // (covers stale/old markup or cached content)
-  const metas = elementos.presentacionesPorAnioContenido.querySelectorAll('.presentacion-mini-meta');
-  metas.forEach(m => {
-    const txt = (m.textContent || '').trim();
-    // hide if there's a colon but nothing after it (robust for stray whitespace)
-    const parts = txt.split(':');
-    if (parts.length > 1 && parts.slice(1).join(':').trim().length === 0) {
-      m.style.display = 'none';
-    }
-  });
 }
 
 // populate año filter on load

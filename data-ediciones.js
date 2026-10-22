@@ -1,11 +1,12 @@
 const ediciones = [
   { id: 'LMQ-001', modeloId: 'LMQ', variante: 'No Rusteze Spoiler', pais: 'Thailand', anio: 2006, imagen: 'images/mcqueennospoiler.png', presentaciones: [] },
-  { id: 'LMQ-002', modeloId: 'LMQ', variante: 'No Rusteze Spoiler', pais: 'China', anio: 2007, imagen: '', presentaciones: [] },
+  { id: 'LMQ-002', modeloId: 'LMQ', variante: 'No Rusteze Spoiler', pais: 'China', anio: 2007, imagen: 'images/mcqueennospoiler.png', presentaciones: [] },
   { id: 'LMQ-003', modeloId: 'LMQ', variante: 'No Rusteze Spoiler/Mouth Plate', pais: 'China', anio: 2007, imagen: '', presentaciones: [] },
   { id: 'LMQ-004', modeloId: 'LMQ', variante: 'Rusteze Spoiler', pais: 'China', anio: 2009, imagen: '', presentaciones: [] },
   { id: 'LMQ-005', modeloId: 'LMQ', variante: 'Rusteze Spoiler', pais: 'Thailand V2', anio: 2018, imagen: '', presentaciones: [] },
   { id: 'LMQ-006', modeloId: 'LMQ', variante: 'Rusteze Spoiler', pais: 'Vietnam', anio: 2020, imagen: '', presentaciones: [] },
   { id: 'LMQ-007', modeloId: 'LMQ', variante: 'Rusteze Spoiler', pais: 'China V2', anio: 2026, imagen: '', presentaciones: [] },
+
   { id: 'MAT-001', modeloId: 'MAT', variante: 'Full Metal Body/Brown Back Wheels', pais: 'Thailand', anio: 2006, imagen: 'images/mater.png', presentaciones: [] },
   { id: 'MAT-002', modeloId: 'MAT', variante: 'Plastic Back/Brown Back Wheels', pais: 'China', anio: 2007, imagen: '', presentaciones: [] },
   { id: 'MAT-003', modeloId: 'MAT', variante: 'Plastic Back/Colored Back Wheels', pais: 'China', anio: 2014, imagen: '', presentaciones: [] },
@@ -13,13 +14,17 @@ const ediciones = [
   { id: 'MAT-005', modeloId: 'MAT', variante: 'Plastic Back/Colored Back Wheels', pais: 'Vietnam', anio: 2020, imagen: '', presentaciones: [] },
   { id: 'MAT-006', modeloId: 'MAT', variante: 'Working Tow Hook', pais: 'Thailand V2', anio: 2022, imagen: '', presentaciones: [] },
   { id: 'MAT-007', modeloId: 'MAT', variante: 'Working Tow Hook', pais: 'China V2', anio: 2026, imagen: '', presentaciones: [] },
+
   { id: 'SAL-001', modeloId: 'SAL', variante: 'Standard', pais: 'Thailand', anio: 2006, imagen: 'images/sally.png', presentaciones: [] },
   { id: 'DOC-001', modeloId: 'DOC', variante: 'Standard', pais: 'Thailand', anio: 2006, imagen: 'images/dochudson.png', presentaciones: [] },
   { id: 'SHE-001', modeloId: 'SHE', variante: 'Standard', pais: 'Thailand', anio: 2006, imagen: 'images/sheriff.png', presentaciones: [] },
   { id: 'LIZ-001', modeloId: 'LIZ', variante: 'Standard', pais: 'Thailand', anio: 2006, imagen: 'images/lizzie.png', presentaciones: [] },
   { id: 'CHICK-001', modeloId: 'CHICK', variante: 'Standard', pais: 'Thailand', anio: 2006, imagen: 'images/chick.png', presentaciones: [] },
   { id: 'KING-001', modeloId: 'KING', variante: 'Standard', pais: 'Thailand', anio: 2006, imagen: 'images/king.png', presentaciones: [] },
+
   { id: 'SAR-001', modeloId: 'SAR', variante: 'Standard', pais: 'Thailand', anio: 2006, imagen: 'images/sargeoriginal.png', presentaciones: [] },
+  { id: 'SAR-002', modeloId: 'SAR', variante: 'Lead Paint', pais: 'China', anio: 2007, imagen: 'images/sargeoriginal.png', presentaciones: [] },
+
   { id: 'FIL-001', modeloId: 'FIL', variante: 'Standard', pais: 'Thailand', anio: 2006, imagen: 'images/fillmore.png', presentaciones: [] },
   { id: 'WIN-001', modeloId: 'WIN', variante: 'Standard', pais: 'Thailand', anio: 2006, imagen: 'images/wingo.png', presentaciones: [] },
   { id: 'DJ-001', modeloId: 'DJ', variante: 'Standard', pais: 'Thailand', anio: 2006, imagen: 'images/dj.png', presentaciones: [] },
@@ -45,3 +50,7 @@ ediciones.forEach(edicion => {
     edicion.imagen = edicion.imagen.src || '';
   }
 });
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = ediciones;
+}

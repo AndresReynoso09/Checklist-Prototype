@@ -27,3 +27,7 @@ const modelos = [
   { id: 'DT-MCQ', nombre: 'Dirt Track LightningMcQueen', pelicula: 'Cars', imagen: '' },
   { id: 'RB-MAT', nombre: 'Rollin\' Bowlin\' Mater', pelicula: 'Cars', imagen: '' }
 ];
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = modelos;
+}

@@ -1,11 +1,14 @@
 {
   "name": "checklist-diecast",
   "version": "0.1.0",
-  "description": "Helper scripts for checklist-diecast",
+  "description": "Checklist de colección de autos de Cars con API y UI mejorada",
   "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
     "fetch-prices": "node fetch_prices.js"
   },
   "dependencies": {
+    "express": "^4.21.2",
     "node-fetch": "^2.6.7"
   }
 }

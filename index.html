@@ -7,81 +7,106 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <main class="pagina">
-    <header class="cabecera">
-      <div>
-        <p class="supertitulo">Checklist de colección</p>
-        <h1>Checklist de Disney Pixar Cars</h1>
-        <p class="descripcion">Marca qué autitos y presentaciones tienes, buscas o te faltan. Tus selecciones se guardan automáticamente en el navegador.</p>
+  <div class="page-shell">
+    <header class="topbar">
+      <div class="brand-block">
+        <span class="brand-badge">Cars</span>
+        <span class="brand-text">Checklist</span>
       </div>
-      <button id="btnReiniciar" type="button" class="boton boton-terciario">Reiniciar mi checklist</button>
+      <nav class="topnav" aria-label="Navegación principal">
+        <button class="tab-nav" type="button" data-view="home">Home</button>
+        <button class="tab-nav" type="button" data-view="search-year">Presentaciones</button>
+      </nav>
     </header>
 
-    <section class="menu-nav" role="tablist" aria-label="Navegación principal">
-      <button class="tab activo" type="button" data-view="home">Home</button>
-      <button class="tab" type="button" data-view="search-cars">Search Cars</button>
-      <button class="tab" type="button" data-view="search-year">Search by Year</button>
-    </section>
+    <main class="pagina">
+      <header class="cabecera hero-panel">
+        <div class="hero-copy">
+          <p class="supertitulo">Checklist de colección</p>
+          <h1>Disney Pixar Cars</h1>
+          <p class="descripcion">Marca qué autitos y presentaciones tienes, buscas o te faltan. Tus selecciones se guardan automáticamente en el navegador.</p>
+          <div class="hero-actions">
+            <button class="boton boton-primary" type="button" data-view="search-cars">Explorar colección</button>
+            <button id="btnReiniciar" type="button" class="boton boton-terciario">Reiniciar checklist</button>
+          </div>
+        </div>
+        <div class="hero-visual" aria-hidden="true">
+          <div class="hero-car"></div>
+        </div>
+      </header>
 
-    <section id="home" class="view">
-      <section class="resumen" aria-label="Resumen de checklist">
-        <article class="resumen-card">
-          <span>Total de autitos</span>
-          <strong id="totalAutitos">0</strong>
-        </article>
-        <article class="resumen-card resumen-positivo">
-          <span>Lo tengo</span>
-          <strong id="tengoAutitos">0</strong>
-        </article>
-        <article class="resumen-card resumen-aviso">
-          <span>Lo busco</span>
-          <strong id="buscoAutitos">0</strong>
-        </article>
-        <article class="resumen-card resumen-falta">
-          <span>Me falta</span>
-          <strong id="faltaAutitos">0</strong>
-        </article>
-        <article class="resumen-card resumen-progreso">
-          <span>% completado</span>
-          <strong id="porcentajeCompletado">0%</strong>
-        </article>
-      </section>
-    </section>
-
-    <section id="search-cars" class="view hidden">
-      <section class="filtros" aria-label="Filtros de búsqueda">
-        <label class="campo-busqueda">
-          <span>Buscar autito</span>
-          <input id="busqueda" type="search" placeholder="Nombre o variante" autocomplete="off" />
-        </label>
-
-        <label class="campo-filtro">
-          <span>Filtrar por estado</span>
-          <select id="filtroEstado">
-            <option value="todos">Todos</option>
-            <option value="lo-tengo">Lo tengo</option>
-            <option value="lo-busco">Lo busco</option>
-            <option value="me-falta">Me falta</option>
-          </select>
-        </label>
+      <section id="home" class="view">
+        <section class="resumen" aria-label="Resumen de checklist">
+          <article class="resumen-card">
+            <span>Total de autitos</span>
+            <strong id="totalAutitos">0</strong>
+          </article>
+          <article class="resumen-card resumen-positivo">
+            <span>Lo tengo</span>
+            <strong id="tengoAutitos">0</strong>
+          </article>
+          <article class="resumen-card resumen-aviso">
+            <span>Lo busco</span>
+            <strong id="buscoAutitos">0</strong>
+          </article>
+          <article class="resumen-card resumen-falta">
+            <span>Me falta</span>
+            <strong id="faltaAutitos">0</strong>
+          </article>
+          <article class="resumen-card resumen-progreso">
+            <span>% completado</span>
+            <strong id="porcentajeCompletado">0%</strong>
+          </article>
+        </section>
       </section>
 
-      <section id="catalogo" class="catalogo" aria-live="polite"></section>
+      <section id="search-cars" class="view hidden">
+        <section class="filtros" aria-label="Filtros de búsqueda">
+          <label class="campo-busqueda">
+            <span>Buscar autito</span>
+            <input id="busqueda" type="search" placeholder="Nombre o variante" autocomplete="off" />
+          </label>
 
-      <p id="mensajeNoResultados" class="texto-empty hidden">No se encontraron autitos con esa búsqueda o filtro.</p>
-    </section>
+          <label class="campo-filtro">
+            <span>Filtrar por estado</span>
+            <select id="filtroEstado">
+              <option value="todos">Todos</option>
+              <option value="lo-tengo">Lo tengo</option>
+              <option value="lo-busco">Lo busco</option>
+              <option value="me-falta">Me falta</option>
+            </select>
+          </label>
+        </section>
 
-    <section id="search-year" class="view hidden">
-      <section class="filtros" aria-label="Buscar por año">
-        <label class="campo-filtro">
-          <span>Selecciona un año</span>
-          <select id="filtroAnio">
-            <option value="todos">Todos</option>
-          </select>
-        </label>
+        <section id="catalogo" class="catalogo" aria-live="polite"></section>
+
+        <p id="mensajeNoResultados" class="texto-empty hidden">No se encontraron autitos con esa búsqueda o filtro.</p>
       </section>
-      <section id="presentacionesPorAnioContenido" class="presentaciones-por-anio" aria-live="polite"></section>
-    </section>
+
+      <section id="search-year" class="view hidden">
+        <section class="filtros" aria-label="Buscar por año">
+          <label class="campo-filtro">
+            <span>Selecciona un año</span>
+            <select id="filtroAnio">
+              <option value="todos">Todos</option>
+            </select>
+          </label>
+        </section>
+        <section id="presentacionesPorAnioContenido" class="presentaciones-por-anio" aria-live="polite"></section>
+      </section>
+    </main>
+  </div>
+
+  <div id="presentacionesModal" class="modal hidden" aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal="true"></div>
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="presentacionesModalTitulo">
+      <div class="modal-header">
+        <h2 id="presentacionesModalTitulo">Presentaciones</h2>
+        <button id="presentacionesModalCerrar" class="modal-close" type="button" aria-label="Cerrar">×</button>
+      </div>
+      <div id="presentacionesModalContenido" class="modal-content"></div>
+    </div>
+  </div>
 
   <script src="data-modelos.js" defer></script>
   <script src="data-ediciones.js" defer></script>
